@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All rights reserved.
+ * Copyright 2015 Google Inc. All rights reserved.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -13,15 +13,28 @@
  * permissions and limitations under the License.
  */
 
-package com.google.maps.errors;
+package com.google.maps.model;
 
 /**
- * Indicates that the API denied the request. Check the message for more detail.
+ * The operator of a line.
+ *
+ * <p>See <a href="https://developers.google.com/maps/documentation/directions/#TransitDetails">
+ * Transit details</a> for more detail.
  */
-public class RequestDeniedException extends ApiException {
-  private static final long serialVersionUID = -1434641617962369958L;
+public class TransitAgency {
 
-  public RequestDeniedException(String errorMessage) {
-    super(errorMessage);
-  }
+  /**
+   * {@code name} contains the name of the transit agency.
+   */
+  public String name;
+
+  /**
+   * {@code url} contains the URL for the transit agency.
+   */
+  public String url;
+
+  /**
+   * {@code phone} contains the phone number of the transit agency.
+   */
+  public String phone;
 }

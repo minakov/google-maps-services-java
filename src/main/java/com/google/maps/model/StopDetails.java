@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All rights reserved.
+ * Copyright 2015 Google Inc. All rights reserved.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -13,15 +13,23 @@
  * permissions and limitations under the License.
  */
 
-package com.google.maps.errors;
+package com.google.maps.model;
 
 /**
- * Indicates that the API denied the request. Check the message for more detail.
+ * The stop/station.
+ *
+ * <p>See <a href="https://developers.google.com/maps/documentation/directions/#TransitDetails">
+ * Transit details</a> for more detail.
  */
-public class RequestDeniedException extends ApiException {
-  private static final long serialVersionUID = -1434641617962369958L;
+public class StopDetails {
 
-  public RequestDeniedException(String errorMessage) {
-    super(errorMessage);
-  }
+  /**
+   * The name of the transit station/stop. eg. "Union Square".
+   */
+  public String name;
+
+  /**
+   * The location of the transit station/stop, represented as a lat and lng field.
+   */
+  public LatLng location;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Google Inc. All rights reserved.
+ * Copyright 2015 Google Inc. All rights reserved.
  *
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this
@@ -16,12 +16,11 @@
 package com.google.maps.errors;
 
 /**
- * Indicates that the API denied the request. Check the message for more detail.
+ * Indicates that the requesting account has exceeded daily quota.
  */
-public class RequestDeniedException extends ApiException {
-  private static final long serialVersionUID = -1434641617962369958L;
+public class OverDailyLimitException extends ApiException {
 
-  public RequestDeniedException(String errorMessage) {
+  public OverDailyLimitException(String errorMessage) {
     super(errorMessage);
   }
 }

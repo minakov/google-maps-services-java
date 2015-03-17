@@ -18,6 +18,7 @@ APIs:
  - [Elevation API]
  - [Geocoding API]
  - [Time Zone API]
+ - [Roads API]
 
 Keep in mind that the same [terms and conditions](https://developers.google.com/maps/terms) apply
 to usage of the APIs when they're accessed through this library.
@@ -25,19 +26,19 @@ to usage of the APIs when they're accessed through this library.
 ## Support
 
 This library is community supported. We're comfortable enough with the stability and features of
-the library that we want you to build real production applications on it. We will make an effort to
-support the public and protected surface of the library and maintain backwards compatibility in the
-future; however, while the library is in version 0.x, we reserve the right to make
-backwards-incompatible changes. If we do remove some functionality (typically because better
-functionality exists or if the feature proved infeasible), our intention is to deprecate and
-provide ample time for developers to update their code.
+the library that we want you to build real production applications on it. We will try to support,
+through Stack Overflow, the public and protected surface of the library and maintain backwards
+compatibility in the future; however, while the library is in version 0.x, we reserve the right
+to make backwards-incompatible changes. If we do remove some functionality (typically because
+better functionality exists or if the feature proved infeasible), our intention is to deprecate
+and give developers a year to update their code.
 
 If you find a bug, or have a feature suggestion, please [log an issue][issues]. If you'd like to
 contribute, please read [How to Contribute][contrib].
 
 ## Requirements
 
- - Java 1.6 or later.
+ - Java 1.7 or later.
  - A Google Maps API key.
 
 ### API keys
@@ -99,7 +100,7 @@ You can find the latest version at the top of this README or by searching
 
 ## Developer Documentation
 
-View the [javadoc](https://googlemaps.github.io/google-maps-services-java/v0.1.3/javadoc).
+View the [javadoc](https://googlemaps.github.io/google-maps-services-java/v0.1.6/javadoc).
 
 Additional documentation for the included web services is available at 
 https://developers.google.com/maps/.
@@ -213,6 +214,7 @@ req.setCallback(new PendingResult.Callback<GeocodingResult[]>() {
 [Google Maps API Web Services]: https://developers.google.com/maps/documentation/webservices/
 [issues]: https://github.com/googlemaps/google-maps-services-java/issues
 [Time Zone API]: https://developers.google.com/maps/documentation/timezone
+[Roads API]: https://developers.google.com/maps/documentation/roads
 
 
 

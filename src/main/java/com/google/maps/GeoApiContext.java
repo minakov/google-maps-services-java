@@ -28,6 +28,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 
 import java.io.UnsupportedEncodingException;
+import java.net.Proxy;
 import java.net.URLEncoder;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +50,7 @@ public class GeoApiContext {
   private final OkHttpClient client = new OkHttpClient();
   private final RateLimitExecutorService rateLimitExecutorService;
 
-  private static Logger log = Logger.getLogger(GeoApiContext.class.getName());
+  private static final Logger LOG = Logger.getLogger(GeoApiContext.class.getName());
   private long errorTimeout = DEFAULT_BACKOFF_TIMEOUT_MILLIS;
 
   public GeoApiContext() {
@@ -71,7 +72,7 @@ public class GeoApiContext {
     }
 
     return getWithPath(clazz, config.fieldNamingPolicy, config.hostName, config.path,
-        query.toString());
+        config.supportsClientId, query.toString());
   }
 
   <T, R extends ApiResponse<T>> PendingResult<T> get(ApiConfig config, Class<? extends R> clazz,
@@ -95,25 +96,26 @@ public class GeoApiContext {
     }
 
     return getWithPath(clazz, config.fieldNamingPolicy, config.hostName, config.path,
-        query.toString());
+        config.supportsClientId, query.toString());
   }
 
   private <T, R extends ApiResponse<T>> PendingResult<T> getWithPath(Class<R> clazz,
-      FieldNamingPolicy fieldNamingPolicy, String hostName, String path, String encodedPath) {
-    checkContext();
+      FieldNamingPolicy fieldNamingPolicy, String hostName, String path,
+      boolean canUseClientId, String encodedPath) {
+    checkContext(canUseClientId);
     if (!encodedPath.startsWith("&")) {
       throw new IllegalArgumentException("encodedPath must start with &");
     }
 
     StringBuilder url = new StringBuilder(path);
-    if (clientId != null) {
+    if (canUseClientId && clientId != null) {
       url.append("?client=").append(clientId);
     } else {
       url.append("?key=").append(apiKey);
     }
     url.append(encodedPath);
 
-    if (clientId != null) {
+    if (canUseClientId && clientId != null) {
       try {
         String signature = urlSigner.getSignature(url.toString());
         url.append("&signature=").append(signature);
@@ -131,15 +133,18 @@ public class GeoApiContext {
         .header("User-Agent", USER_AGENT)
         .url(hostName + url).build();
 
-    log.log(Level.INFO, "Request: {0}", hostName + url);
+    LOG.log(Level.INFO, "Request: {0}", hostName + url);
 
     return new OkHttpPendingResult<T, R>(req, client, clazz, fieldNamingPolicy, errorTimeout);
   }
 
-  private void checkContext() {
+  private void checkContext(boolean canUseClientId) {
     if (urlSigner == null && apiKey == null) {
       throw new IllegalStateException(
           "Must provide either API key or Maps for Work credentials.");
+    } else if (!canUseClientId && apiKey == null) {
+      throw new IllegalStateException(
+          "API does not support client ID & secret - you must provide a key");
     }
     if (urlSigner == null && !apiKey.startsWith("AIza")) {
       throw new IllegalStateException("Invalid API key.");
@@ -223,6 +228,16 @@ public class GeoApiContext {
    */
   public GeoApiContext setQueryRateLimit(int maxQps, int minimumInterval) {
     rateLimitExecutorService.setQueriesPerSecond(maxQps, minimumInterval);
+    return this;
+  }
+
+  /**
+   * Sets the proxy for new connections.
+   *
+   * @param proxy The proxy to be used by the underlying HTTP client.
+   */
+  public GeoApiContext setProxy(Proxy proxy) {
+    client.setProxy(proxy == null ? Proxy.NO_PROXY : proxy);
     return this;
   }
 }
